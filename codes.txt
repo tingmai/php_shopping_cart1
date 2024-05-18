@@ -47,6 +47,92 @@ function displayCart() {
 addToCart(1, 2); // Add 2 of item 1
 addToCart(2, 1); // Add 1 of item 2
 increaseItemQuantity(1); // Increase quantity of item 1 by 1
+
+
+
+====================
+
+
+OOP Codes
+
+======================
+
+
+<?php
+// Start session
+session_start();
+
+class ShoppingCart {
+    private $cart;
+
+    public function __construct() {
+        // Initialize cart as an empty array if it doesn't exist in the session
+        if (!isset($_SESSION['cart'])) {
+            $_SESSION['cart'] = [];
+        }
+        $this->cart = &$_SESSION['cart'];
+    }
+
+    public function addToCart($productId, $quantity = 1) {
+        // Check if the product already exists in the cart
+        if (array_key_exists($productId, $this->cart)) {
+            // If it does, increase the quantity
+            $this->cart[$productId] += $quantity;
+        } else {
+            // If not, add the product to the cart
+            $this->cart[$productId] = $quantity;
+        }
+    }
+
+    public function removeFromCart($productId, $quantity = 1) {
+        // Check if the product exists in the cart
+        if (array_key_exists($productId, $this->cart)) {
+            // Decrease the quantity
+            $this->cart[$productId] -= $quantity;
+            // If quantity reaches zero or less, remove the product from the cart
+            if ($this->cart[$productId] <= 0) {
+                unset($this->cart[$productId]);
+            }
+        }
+    }
+
+    public function getCartContents() {
+        return $this->cart;
+    }
+
+    public function clearCart() {
+        // Clear the entire cart
+        $this->cart = [];
+    }
+}
+
+// Example usage:
+$cart = new ShoppingCart();
+
+// Add some items to the cart
+$cart->addToCart('001', 2); // Product with ID '001', quantity 2
+$cart->addToCart('002', 1); // Product with ID '002', quantity 1
+
+// Remove an item from the cart
+$cart->removeFromCart('001', 1); // Remove 1 quantity of product with ID '001'
+
+// Get cart contents
+$contents = $cart->getCartContents();
+echo "Cart Contents: <pre>";
+print_r($contents);
+echo "</pre>";
+
+// Clear the cart
+$cart->clearCart();
+
+// Get cart contents after clearing
+$contents = $cart->getCartContents();
+echo "Cart Contents after clearing: <pre>";
+print_r($contents);
+echo "</pre>";
+?>
+
+
 decreaseItemQuantity(2); // Decrease quantity of item 2 by 1
 removeFromCart(1); // Remove item 1 from cart
 
