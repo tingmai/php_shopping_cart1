@@ -1,0 +1,54 @@
+session_start();
+
+if (!isset($_SESSION['cart'])) {
+    $_SESSION['cart'] = [];
+}
+
+function addToCart($itemId, $quantity) {
+    if (isset($_SESSION['cart'][$itemId])) {
+        $_SESSION['cart'][$itemId] += $quantity;
+    } else {
+        $_SESSION['cart'][$itemId] = $quantity;
+    }
+}
+
+function removeFromCart($itemId) {
+    if (isset($_SESSION['cart'][$itemId])) {
+        unset($_SESSION['cart'][$itemId]);
+    }
+}
+
+function increaseItemQuantity($itemId) {
+    if (isset($_SESSION['cart'][$itemId])) {
+        $_SESSION['cart'][$itemId]++;
+    }
+}
+
+function decreaseItemQuantity($itemId) {
+    if (isset($_SESSION['cart'][$itemId])) {
+        $_SESSION['cart'][$itemId]--;
+        if ($_SESSION['cart'][$itemId] <= 0) {
+            removeFromCart($itemId);
+        }
+    }
+}
+
+function displayCart() {
+    if (!empty($_SESSION['cart'])) {
+        foreach ($_SESSION['cart'] as $itemId => $quantity) {
+            echo "Item ID: $itemId, Quantity: $quantity<br>";
+        }
+    } else {
+        echo "Your cart is empty.";
+    }
+}
+
+// Example actions
+addToCart(1, 2); // Add 2 of item 1
+addToCart(2, 1); // Add 1 of item 2
+increaseItemQuantity(1); // Increase quantity of item 1 by 1
+decreaseItemQuantity(2); // Decrease quantity of item 2 by 1
+removeFromCart(1); // Remove item 1 from cart
+
+displayCart(); // Display cart contents
+?>
